@@ -23,11 +23,56 @@ public class FiboC {
     }
 
     long fasterC(long n, int m) {
-        //Интуитивно найти решение не всегда просто и
-        //возможно потребуется дополнительный поиск информации
-        return -1L;
+
+        if (n <= 1) {
+            return n;
+        }
+
+        // Шаг 1: Находим период Пизано для модуля m
+        int period = findPisanoPeriod(m);
+
+        // Шаг 2: Уменьшаем n, используя период
+        long reducedN = n % period;
+
+        // Шаг 3: Вычисляем F(reducedN) mod m
+        return fibonacciMod(reducedN, m);
     }
 
+    private int findPisanoPeriod(int m) {
+        int prev = 0;
+        int curr = 1;
+        int period = 0;
 
-}
+
+        for (int i = 0; i < m * m; i++) {
+            int next = (prev + curr) % m;
+            prev = curr;
+            curr = next;
+
+            if (prev == 0 && curr == 1) {
+                period = i + 1;
+                break;
+            }
+        }
+
+        return period;
+    }
+
+    private long fibonacciMod(long n, int m) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+
+        long prev = 0;
+        long curr = 1;
+
+        for (long i = 2; i <= n; i++) {
+            long next = (prev + curr) % m;
+            prev = curr;
+            curr = next;
+        }
+
+        return curr;
+    }
+     }
+
 
